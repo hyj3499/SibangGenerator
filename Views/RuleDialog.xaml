@@ -58,7 +58,7 @@
               <RadioButton x:Name="RbA" GroupName="Filter" IsChecked="True" FontWeight="SemiBold"
                            Content="A · 원본 그대로"/>
               <TextBlock Style="{StaticResource Hint}" Margin="22,3,0,0"
-                         Text="옛 시방의 모든 단락과 모델을 그대로 가져옵니다. 등록한 모델이 이 단락에 없으면 로그에 경고만 남깁니다."/>
+                         Text="기존 시방의 모든 단락과 모델을 그대로 가져옵니다. 등록한 모델이 이 단락에 없으면 로그에 경고를 표시합니다."/>
             </StackPanel>
           </Border>
 
@@ -83,7 +83,7 @@
               <RadioButton x:Name="RbC" GroupName="Filter" FontWeight="SemiBold"
                            Content="C · 무관 그룹만 삭제"/>
               <TextBlock Style="{StaticResource Hint}" Margin="22,3,0,0"
-                         Text="등록 모델이 하나라도 있는 그룹은 모델 나열을 손대지 않습니다. 하나도 없는 그룹만 삭제합니다."/>
+                         Text="등록 모델이 하나라도 있는 그룹은 기존 시방 그대로 출력합니다. 등록 모델이 하나도 없는 그룹은 통째로 삭제합니다."/>
               <Border Background="{StaticResource Paper}" BorderBrush="{StaticResource Rule}"
                       BorderThickness="1" Padding="8,5" Margin="22,6,0,0">
                 <TextBlock FontFamily="{StaticResource Mono}" FontSize="10" Foreground="{StaticResource Dim}"
@@ -93,7 +93,7 @@
           </Border>
 
           <TextBlock Style="{StaticResource Hint}" Margin="0,10,0,0"
-                     Text="Wi-Fi / Buzzer 표시 모델 줄은 B 옵션에서 해당 모델이 없어도 줄은 남기고 나열만 비웁니다. '표시 제외 모델' 같은 설명문은 절대 건드리지 않습니다."/>
+                     Text="Wi-Fi / Buzzer 표시 모델 줄은 B 옵션에서 해당 모델이 없어도 줄은 남기고 나열만 비웁니다. '표시 제외 모델'은 건드리지 않습니다."/>
         </StackPanel>
 
         <!-- 설명만 나오는 규칙들 -->

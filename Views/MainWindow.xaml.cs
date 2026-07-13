@@ -109,7 +109,7 @@ public partial class MainWindow : Window
 
     static readonly (int No, string Label)[] StepDefs =
     {
-        (1, "옛 시방"), (2, "모델 · 경로"), (3, "구조 분석"), (4, "변환 규칙"), (5, "미리보기")
+        (1, "기존 시방"), (2, "모델 · 경로"), (3, "구조 분석"), (4, "변환 규칙"), (5, "미리보기")
     };
 
     void DrawSteps() => Stepper.ItemsSource = StepDefs.Select(s =>
@@ -147,7 +147,7 @@ public partial class MainWindow : Window
     void Step_Click(object s, RoutedEventArgs e) { if (s is Button b && b.Tag is int n) Go(n); }
     void Say(string m) => Status.Text = m;
 
-    // ═══ 1. 옛 시방 첨부 ═══════════════════════════
+    // ═══ 1. 기존 시방 첨부 ═══════════════════════════
 
     void Pick_File(object s, RoutedEventArgs e)
     {
@@ -680,7 +680,7 @@ public partial class MainWindow : Window
 
     void Load_Click(object s, RoutedEventArgs e)
     {
-        if (_parser.Lines.Length == 0) { MessageBox.Show("먼저 옛 시방 TXT를 첨부하세요."); return; }
+        if (_parser.Lines.Length == 0) { MessageBox.Show("먼저 기존 시방 TXT를 첨부하세요."); return; }
 
         var d = new OpenFileDialog { Filter = "JSON|*.json" };
         if (d.ShowDialog() != true) return;

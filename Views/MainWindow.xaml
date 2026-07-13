@@ -86,14 +86,14 @@
 
     <Grid Grid.Row="1">
 
-      <!-- ─── 1. 옛 시방 첨부 ─── -->
+      <!-- ─── 1. 기존 시방 첨부 ─── -->
       <Grid x:Name="P1">
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="700">
           <Border Background="{StaticResource Panel}" BorderBrush="{StaticResource RuleHard}"
                   BorderThickness="1" Padding="48,44" AllowDrop="True"
                   Drop="Drop_File" DragOver="Drag_Over">
             <StackPanel HorizontalAlignment="Center">
-              <TextBlock Text="옛 시방 TXT를 첨부하세요" FontSize="23" FontWeight="SemiBold"
+              <TextBlock Text="기존 시방 TXT를 첨부하세요" FontSize="23" FontWeight="SemiBold"
                          HorizontalAlignment="Center"/>
               <TextBlock Text="이 문서의 레이아웃을 따라 새 시방을 만듭니다."
                          Margin="0,8,0,22" HorizontalAlignment="Center"
@@ -318,7 +318,7 @@
 
                 <TextBlock Text="모델 사전" Style="{StaticResource Eyebrow}" Margin="0,14,0,4"/>
                 <TextBlock Style="{StaticResource Hint}" Margin="0,0,0,6"
-                           Text="옛 시방에서 자동 수집됩니다. 모델 나열 줄을 판별하는 데 쓰입니다."/>
+                           Text="기존 시방에서 자동 수집됩니다. 모델 나열 줄을 판별하는 데 쓰입니다."/>
                 <TextBox x:Name="TbDict" Height="60" AcceptsReturn="True" TextWrapping="Wrap"
                          VerticalScrollBarVisibility="Auto" TextChanged="Dict_Changed"/>
                 <TextBlock x:Name="DictN" Style="{StaticResource Hint}" Margin="0,4,0,0"/>
@@ -645,7 +645,7 @@
           <DockPanel Grid.Column="0">
             <Border DockPanel.Dock="Top" Background="{StaticResource Panel}" Height="34"
                     BorderBrush="{StaticResource Rule}" BorderThickness="0,0,0,1">
-              <TextBlock Text="옛 시방" Style="{StaticResource Eyebrow}" Margin="14,0" VerticalAlignment="Center"/>
+              <TextBlock Text="기존 시방" Style="{StaticResource Eyebrow}" Margin="14,0" VerticalAlignment="Center"/>
             </Border>
             <ListBox x:Name="LvOld" BorderThickness="0" Background="{StaticResource Paper}"
                      ItemTemplate="{StaticResource LineTpl}" HorizontalContentAlignment="Stretch"
@@ -717,7 +717,7 @@
 
     <Border Grid.Row="2" Background="{StaticResource Panel}"
             BorderBrush="{StaticResource RuleHard}" BorderThickness="0,1.5,0,0" Padding="14,5">
-      <TextBlock x:Name="Status" Text="옛 시방 TXT를 첨부하세요."
+      <TextBlock x:Name="Status" Text="기존 시방 TXT를 첨부하세요."
                  FontFamily="{StaticResource Mono}" FontSize="11" Foreground="{StaticResource Dim}"/>
     </Border>
   </Grid>

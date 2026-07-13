@@ -48,7 +48,7 @@ public sealed class CountToBrushConverter : IValueConverter
     public object ConvertBack(object v, Type t, object p, CultureInfo c) => Binding.DoNothing;
 }
 
-/// <summary>최상위 섹션(0. 1. 2. ...) 이면 연노랑, 아니면 기본 패널색.</summary>
+/// <summary>최상위 섹션(0. 1. 2. ...) 이면 연노랑(하이하이트), 아니면 기본 패널색.</summary>
 public sealed class SectionHeaderBrushConverter : IValueConverter
 {
     static readonly SolidColorBrush Section = new(Color.FromRgb(0xF7, 0xEF, 0xC8));  // 연노랑

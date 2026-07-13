@@ -5,7 +5,7 @@ using SibangGenerator.Services.Transforms;
 namespace SibangGenerator.Services;
 
 /// <summary>
-/// 옛 시방 + 등록 모델 + 변환 규칙  →  새 시방.
+/// 기존 시방 + 등록 모델 + 변환 규칙  →  새 시방.
 ///
 /// 파이프라인:
 ///   1) 변환기 적용 (블록 단위, 원본 순서 유지)

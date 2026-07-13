@@ -237,6 +237,6 @@ public sealed class ListFilterTransform : ITransform
                 present.Add(m);
 
         foreach (var name in ctx.Registered.Where(x => !present.Contains(x)))
-            ctx.Warn(block.From, $"{name} · \"{block.Title}\" 에 없음 (옛 시방에 미등장)");
+            ctx.Warn(block.From, $"{name} · \"{block.Title}\" 에 없음 (기존 시방에 미등장)");
     }
 }

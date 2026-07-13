@@ -37,7 +37,7 @@
 
       <TextBlock Text="BOM 직접 지정" Style="{StaticResource Eyebrow}" Margin="0,16,0,4"/>
       <TextBlock Style="{StaticResource Hint}" Margin="0,0,0,6"
-                 Text="여기에 입력한 값이 엑셀 조회보다 우선합니다. 제품버전 재생성(T2)도 이 값을 씁니다."/>
+                 Text="BOM 직접 지정 시 입력한 값이 엑셀 조회보다 우선하며, 제품버전 재생성(T2)도 이 값을 씀."/>
       <ComboBox x:Name="CbBom" IsEditable="True" IsTextSearchEnabled="False"
                 KeyUp="Bom_Typed" SelectionChanged="Bom_Changed"/>
 
