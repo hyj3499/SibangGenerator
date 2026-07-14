@@ -53,30 +53,47 @@ public sealed class BomLookup : IDisposable
         }
     }
 
-    /// <summary>모델명으로 BOM 을 찾는다. 못 찾으면 null.</summary>
-    public string? Find(string model)
+    /// <summary>
+    /// 모델명으로 BOM 을 찾는다.
+    ///
+    /// 지정된 여러 열을 모두 뒤진다. 한 셀에 여러 모델이 줄바꿈으로 들어있으면
+    /// 분해 후 정확일치로 찾는다 (ENCXUAEC 와 ENCXUAECRC 를 구분).
+    ///
+    /// 모델을 찾은 셀이 세로로 병합돼 있으면 어느 행의 BOM 인지 알 수 없으므로
+    /// 값을 가져오지 않고 MergedCell 을 돌려준다. 사용자가 직접 지정하게 한다.
+    /// </summary>
+    public BomFindResult Find(string model)
     {
-        if (_sheet is null) return null;
+        if (_sheet is null) return BomFindResult.NotFound;
 
         for (int r = 1; r <= _lastRow; r++)
         {
             foreach (int matchCol in _matchCols)
             {
-                string cell = _sheet.Cell(r, matchCol).GetString();
-                if (cell.Length == 0) continue;
+                var cell = _sheet.Cell(r, matchCol);
+                bool merged = cell.IsMerged();
+                string cellValue = merged
+                    ? cell.MergedRange().FirstCell().GetString()
+                    : cell.GetString();
+
+                if (cellValue.Length == 0) continue;
 
                 var candidates = _splitCell
-                    ? cell.Split(new[] { '\r', '\n', ',', ';' },
+                    ? cellValue.Split(new[] { '\r', '\n', ',', ';' },
                         StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                    : new[] { cell.Trim() };
-                if (candidates.Any(c => string.Equals(c, model, StringComparison.Ordinal)))
-                {
-                    string bom = _sheet.Cell(r, _valueCol).GetString().Trim();
-                    return bom.Length > 0 ? bom : null; // 일치하는 행을 찾았으므로 즉시 반환
-                }
+                    : new[] { cellValue.Trim() };
+
+                if (!candidates.Any(c => string.Equals(c, model, StringComparison.Ordinal)))
+                    continue;
+
+                if (merged)
+                    return BomFindResult.MergedCell;
+
+                string bom = _sheet.Cell(r, _valueCol).GetString().Trim();
+                return bom.Length > 0 ? BomFindResult.Found(bom) : BomFindResult.NotFound;
             }
         }
-        return null;
+        return BomFindResult.NotFound;
     }
 
 

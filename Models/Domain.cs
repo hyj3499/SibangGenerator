@@ -81,9 +81,24 @@ public sealed class VersionGroup
 }
 
 /// <summary>
-/// 버전 그룹을 풀어서 모델 하나하나로 만든 것.
-/// BOM 은 엑셀에서, 폴더 존재 여부는 디스크에서 채운다.
+/// BOM 조회 결과. 단순 실패와 "병합 셀이라 판단 불가"를 구분한다.
+///
+/// 병합된 셀에 모델이 있으면 어느 행의 BOM 을 써야 할지 알 수 없다.
+/// (G47, G48 이 병합돼 있으면 47행 값인지 48행 값인지 모른다)
+/// 그래서 아무 값이나 가져오지 않고 사용자가 직접 지정하게 한다.
 /// </summary>
+public readonly struct BomFindResult
+{
+    public string? Bom { get; init; }
+    public bool Merged { get; init; }
+
+    public static BomFindResult Found(string bom) => new() { Bom = bom };
+    public static BomFindResult NotFound => new();
+    public static BomFindResult MergedCell => new() { Merged = true };
+
+    public bool HasBom => !string.IsNullOrEmpty(Bom);
+}
+
 /// <summary>
 /// 버전 그룹을 풀어서 모델 하나하나로 만든 것.
 /// BOM 은 엑셀에서, 폴더 존재 여부는 디스크에서 채운다.
@@ -101,6 +116,17 @@ public sealed class ResolvedModel : INotifyPropertyChanged
 
     /// <summary>엑셀에서 조회한 값. 사용자가 덮어쓰지 않았을 때만 쓰인다.</summary>
     public string? ExcelBom { get; set; }
+
+    /// <summary>
+    /// 모델이 병합된 셀에서 발견되어 BOM 을 확정할 수 없는 상태.
+    /// 이 경우 조회를 포기하고 사용자가 직접 지정하게 한다.
+    /// </summary>
+    bool _mergedCell;
+    public bool MergedCell
+    {
+        get => _mergedCell;
+        set { _mergedCell = value; NotifyAll(); }
+    }
 
     string? _manualBom;
     /// <summary>사용자가 직접 지정한 BOM. null 이 아니면 엑셀 값을 무시한다.</summary>
@@ -130,7 +156,10 @@ public sealed class ResolvedModel : INotifyPropertyChanged
     public List<string> Files { get; set; } = new();
 
     public string Status =>
-        !BomFound ? "BOM 조회 실패 — 클릭해서 직접 지정"
+        IsOverridden && FolderFound ? $"{Bom} · 파일 {Files.Count}개"
+        : IsOverridden ? $"{Bom} · 폴더 없음"
+        : MergedCell ? "셀 병합됨 — 클릭해서 직접 지정"
+        : !BomFound ? "BOM 조회 실패 — 클릭해서 직접 지정"
         : !FolderFound ? $"{Bom} · 폴더 없음"
         : $"{Bom} · 파일 {Files.Count}개";
 
@@ -257,15 +286,21 @@ public sealed class WorkspaceSettings
 }
 
 /// <summary>저장/공유되는 생성 규칙 세트.</summary>
+/// <summary>
+/// 저장/공유되는 변환 규칙 세트.
+///
+/// 규칙만 담는다. 모델 그룹 · 경로 · 엑셀 설정은 저장하지 않는다.
+/// (경로 · 사전은 AppSettings 가 %APPDATA% 에 따로 기억한다)
+///
+/// UseEnglish 는 규칙 재연결에 필요해서 남긴다. 규칙이 영문 단락에도
+/// 미러링되므로, 불러올 때 영문 여부를 알아야 앵커를 제대로 찾는다.
+/// </summary>
 public sealed class GeneratorSet
 {
-    public string Schema { get; set; } = "sibang-generator/1";
+    public string Schema { get; set; } = "sibang-generator/2";
     public DateTime Saved { get; set; } = DateTime.Now;
     public bool UseEnglish { get; set; }
     public string? BoundaryHint { get; set; }
-    public List<string> ModelDictionary { get; set; } = new();
-    public WorkspaceSettings Settings { get; set; } = new();
-    public List<VersionGroup> VersionGroups { get; set; } = new();
     public List<TransformRule> Rules { get; set; } = new();
 }
 

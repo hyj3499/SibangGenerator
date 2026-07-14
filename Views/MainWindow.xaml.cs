@@ -663,19 +663,16 @@ public partial class MainWindow : Window
 
     void Save_Click(object s, RoutedEventArgs e)
     {
-        var d = new SaveFileDialog { Filter = "JSON|*.json", FileName = "generator-set.json" };
+        var d = new SaveFileDialog { Filter = "JSON|*.json", FileName = "rules.json" };
         if (d.ShowDialog() != true) return;
 
         GeneratorStore.Save(d.FileName, new GeneratorSet
         {
             UseEnglish = _parser.UseEnglish,
             BoundaryHint = _parser.EnglishAt >= 0 ? _parser.Lines[_parser.EnglishAt].Trim() : null,
-            ModelDictionary = _parser.Dictionary,
-            Settings = ReadSettings(),
-            VersionGroups = _groups.ToList(),
             Rules = _rules.ToList()
         });
-        Say($"{Path.GetFileName(d.FileName)} 저장");
+        Say($"{Path.GetFileName(d.FileName)} · 규칙 {_rules.Count}개 저장");
     }
 
     void Load_Click(object s, RoutedEventArgs e)
@@ -689,17 +686,10 @@ public partial class MainWindow : Window
         {
             var set = GeneratorStore.Load(d.FileName);
 
-            ApplySettings(set.Settings);
-            if (set.ModelDictionary.Count > 0)
-            {
-                _parser.SetDictionary(set.ModelDictionary);
-                TbDict.Text = string.Join(", ", _parser.Dictionary);
-            }
+            // 규칙만 불러온다. 현재 모델 · 경로 · 사전은 건드리지 않는다.
+            // 다만 규칙이 영문에 미러링되므로 영문 여부는 반영해야 앵커가 맞는다.
             _parser.UseEnglish = set.UseEnglish;
             ChkEn.IsChecked = set.UseEnglish;
-
-            _groups.Clear();
-            foreach (var g in set.VersionGroups) _groups.Add(g);
 
             _parser.Analyze();
             var (linked, missing) = GeneratorStore.Reconnect(set, _parser);
@@ -708,17 +698,16 @@ public partial class MainWindow : Window
             foreach (var r in linked) _rules.Add(r);
             _seq = linked.Count + 1;
 
-            RefreshVersions();
-            RefreshGroups();
             Unlock(4);
             Go(4);
             RefreshRules();
 
-            Say($"앵커 재연결 {linked.Count}건" + (missing > 0 ? $" · 미발견 {missing}건 건너뜀" : ""));
+            Say($"규칙 {linked.Count}개 불러옴 (앵커 재연결)"
+                + (missing > 0 ? $" · 미발견 {missing}건 건너뜀" : ""));
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"규칙 세트를 읽을 수 없습니다.\n\n{ex.Message}", "오류",
+            MessageBox.Show($"규칙 파일을 읽을 수 없습니다.\n\n{ex.Message}", "오류",
                 MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }

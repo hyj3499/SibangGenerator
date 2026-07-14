@@ -36,8 +36,15 @@ public static class ModelResolver
                     Order = order++
                 };
 
-                // 1) 엑셀 조회 (없으면 null)
-                m.ExcelBom = (bom is not null && bom.Ready) ? bom.Find(name) : null;
+                // 1) 엑셀 조회 (없으면 조회 안 함)
+                if (bom is not null && bom.Ready)
+                {
+                    var found = bom.Find(name);
+                    if (found.Merged)
+                        m.MergedCell = true;          // 병합 셀 → BOM 확정 불가
+                    else
+                        m.ExcelBom = found.Bom;
+                }
 
                 // 2) 사용자 지정 BOM 이 있으면 덮어쓴다
                 if (g.BomOverrides.TryGetValue(name, out var manual) &&

@@ -32,9 +32,11 @@ public partial class BomOverrideDialog : Window
         Head.Text = model.Name;
         Sub.Text = $"버전 {model.Version}";
 
-        Current.Text = model.ExcelBom is not null
-            ? $"엑셀 조회: {model.ExcelBom}"
-            : "엑셀에서 BOM 을 찾지 못했습니다.";
+        Current.Text = model.MergedCell
+            ? "엑셀에서 병합된 셀에 있어 BOM 을 확정할 수 없습니다."
+            : model.ExcelBom is not null
+                ? $"엑셀 조회: {model.ExcelBom}"
+                : "엑셀에서 BOM 을 찾지 못했습니다.";
 
         if (model.IsOverridden)
             Current.Text += $"\n직접 지정: {model.ManualBom} (적용 중)";
