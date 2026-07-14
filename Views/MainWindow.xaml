@@ -107,7 +107,7 @@
           </Border>
           <TextBlock Margin="0,24,0,0" TextAlignment="Center" TextWrapping="Wrap"
                      FontSize="12" Foreground="{StaticResource Dim}" LineHeight="20"
-                     Text="번호는 신뢰하지 않습니다. 제목 키워드를 앵커로 삼으므로 6-1이 사라지고 6-2가 6-1이 되어도 규칙이 그대로 붙습니다."/>
+                     Text="Ver 0.00.0"/>
         </StackPanel>
       </Grid>
 
@@ -139,7 +139,7 @@
             <StackPanel>
               <TextBlock x:Name="GroupEmpty" Margin="24,50" TextAlignment="Center"
                          Style="{StaticResource Hint}"
-                         Text="아래 [+ 모델 추가] 를 눌러&#x0a;버전 하나에 모델 여러 개를 묶어 등록하세요.&#x0a;&#x0a;같은 버전은 두 번 등록할 수 없으므로&#x0a;한 모델은 한 버전만 갖습니다."/>
+                         Text="아래 [+ 모델 추가] 를 눌러&#x0a;버전 하나에 모델 여러 개를 묶어 등록하세요.&#x0a;&#x0a;(예: 1.007a 버전: PREMTBB20.ENCXUAEC, PREMTB200B.ENCXCOM)&#x0a;(예: 1.008a 버전: PREMTB200.AKMC, PREMTB200.AKM)"/>
 
               <ItemsControl x:Name="GroupList">
                 <ItemsControl.ItemTemplate>
@@ -196,7 +196,7 @@
                             HorizontalAlignment="Right" Click="RefreshResolve_Click"/>
                   </DockPanel>
                   <TextBlock Style="{StaticResource Hint}" Margin="0,0,0,8"
-                             Text="행을 클릭하면 BOM 을 직접 지정할 수 있습니다. 직접 지정한 값은 엑셀 조회보다 우선하며, 갱신해도 유지됩니다."/>
+                             Text="행을 클릭하면 BOM 을 직접 지정할 수 있음. 직접 지정한 값은 엑셀 조회보다 우선함."/>
 
                   <ListBox x:Name="ResolveList" BorderThickness="0" Background="Transparent"
                            HorizontalContentAlignment="Stretch"
@@ -264,7 +264,7 @@
 
                 <TextBlock Text="펌웨어 루트 경로" Style="{StaticResource Eyebrow}" Margin="0,0,0,4"/>
                 <TextBlock Style="{StaticResource Hint}" Margin="0,0,0,6"
-                           Text="이 아래의 {BOM}_{Ver} 폴더를 직접 읽습니다. 폴더명에서 버전 목록을 수집합니다."/>
+                           Text="이 아래의 {BOM}_{Ver} 폴더를 직접 읽습니다. 폴더명에서 가능한 버전 목록을 수집합니다."/>
                 <DockPanel>
                   <Button Content="…" Style="{StaticResource Btn}" Width="32" Padding="0"
                           DockPanel.Dock="Right" Margin="5,0,0,0" Click="PickRoot_Click"/>

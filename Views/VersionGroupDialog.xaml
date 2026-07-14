@@ -10,7 +10,7 @@
             BorderBrush="{StaticResource Ink}" BorderThickness="0,0,0,1.5" Padding="16,12">
       <StackPanel>
         <TextBlock x:Name="Head" Text="모델 추가" FontSize="14" FontWeight="SemiBold"/>
-        <TextBlock Text="버전 하나에 모델 여러 개를 묶습니다." FontSize="11.5"
+        <TextBlock Text="버전 마다 모델을 여러개 등록." FontSize="11.5"
                    Foreground="{StaticResource Dim}" Margin="0,2,0,0"/>
       </StackPanel>
     </Border>
@@ -32,7 +32,7 @@
 
       <TextBlock Text="모델명" Style="{StaticResource Eyebrow}" Margin="0,16,0,4"/>
       <TextBlock Style="{StaticResource Hint}" Margin="0,0,0,6"
-                 Text="쉼표 또는 줄바꿈으로 구분해 통째로 붙여넣으세요. 중복은 자동 제거됩니다."/>
+                 Text="모델명을 다음과 같이 입력. (예: PREMTBB20.ENCXUAEC, PREMTB200.AKMC, PREMTB200.AKM, PREMTB200.ENCXCOM)"/>
       <TextBox x:Name="TbModels" Height="150" AcceptsReturn="True" TextWrapping="Wrap"
                VerticalScrollBarVisibility="Auto" TextChanged="Models_Changed"/>
 

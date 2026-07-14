@@ -15,7 +15,8 @@ public sealed class BomLookup : IDisposable
 {
     readonly XLWorkbook? _wb;
     readonly IXLWorksheet? _sheet;
-    readonly int _matchCol, _valueCol, _lastRow;
+    readonly int _valueCol, _lastRow;
+    readonly int[] _matchCols; // 여러 열 입력 가능
     readonly bool _splitCell;
 
     public bool Ready => _sheet is not null;
@@ -24,7 +25,10 @@ public sealed class BomLookup : IDisposable
     public BomLookup(WorkspaceSettings ws)
     {
         _splitCell = ws.SplitCell;
-        _matchCol = ColumnIndex(ws.MatchColumn);
+        _matchCols = (ws.MatchColumn ?? "")
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(ColumnIndex)
+            .ToArray();
         _valueCol = ColumnIndex(ws.ValueColumn);
 
         if (string.IsNullOrWhiteSpace(ws.ExcelPath))
@@ -32,6 +36,9 @@ public sealed class BomLookup : IDisposable
 
         if (!File.Exists(ws.ExcelPath))
         { Error = $"엑셀 파일을 찾을 수 없습니다: {ws.ExcelPath}"; return; }
+
+        if (_matchCols.Length == 0)
+        { Error = "엑셀 열이 지정되지 않았습니다."; return; }
 
         try
         {
@@ -53,23 +60,25 @@ public sealed class BomLookup : IDisposable
 
         for (int r = 1; r <= _lastRow; r++)
         {
-            string cell = _sheet.Cell(r, _matchCol).GetString();
-            if (cell.Length == 0) continue;
+            foreach (int matchCol in _matchCols)
+            {
+                string cell = _sheet.Cell(r, matchCol).GetString();
+                if (cell.Length == 0) continue;
 
-            var candidates = _splitCell
-                ? cell.Split(new[] { '\r', '\n', ',', ';' },
-                    StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                : new[] { cell.Trim() };
-
-            // Ordinal 정확일치 — 부분일치를 절대 허용하지 않는다
-            if (!candidates.Any(c => string.Equals(c, model, StringComparison.Ordinal)))
-                continue;
-
-            string bom = _sheet.Cell(r, _valueCol).GetString().Trim();
-            return bom.Length > 0 ? bom : null;
+                var candidates = _splitCell
+                    ? cell.Split(new[] { '\r', '\n', ',', ';' },
+                        StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    : new[] { cell.Trim() };
+                if (candidates.Any(c => string.Equals(c, model, StringComparison.Ordinal)))
+                {
+                    string bom = _sheet.Cell(r, _valueCol).GetString().Trim();
+                    return bom.Length > 0 ? bom : null; // 일치하는 행을 찾았으므로 즉시 반환
+                }
+            }
         }
         return null;
     }
+
 
     /// <summary>엑셀 열문자 → 1-based 인덱스 (G → 7).</summary>
     static int ColumnIndex(string col)
